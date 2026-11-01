@@ -32,5 +32,6 @@ public class Main {
         }
 
         System.out.println(expenseService.splitExpense(expenses.getFirst()));
+        System.out.println(expenseService.calculateBalances(expenses));
     }
 }
