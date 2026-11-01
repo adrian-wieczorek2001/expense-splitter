@@ -2,11 +2,9 @@ package pl.adrianwieczorek.expensesplitter.service;
 
 import pl.adrianwieczorek.expensesplitter.model.Expense;
 import pl.adrianwieczorek.expensesplitter.model.Person;
+import pl.adrianwieczorek.expensesplitter.model.Transfer;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ExpenseService {
     public Map<Person, Long> splitExpense(Expense expense) {
@@ -28,6 +26,7 @@ public class ExpenseService {
         }
         return result;
     }
+
     public Map<Person, Long> calculateBalances(List<Expense> expenses) {
         Map<Person, Long> balances = new HashMap<>();
 
@@ -46,4 +45,53 @@ public class ExpenseService {
         }
         return balances;
     }
+
+    private boolean hasNonZeroBalance(Map<Person, Long> balances) {
+        for (long value : balances.values()) {
+            if (value != 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private Optional<Person> findDebtor(Map<Person, Long> balances) {
+        for (Map.Entry<Person, Long> entry : balances.entrySet()) {
+            if (entry.getValue() < 0) {
+                return Optional.of(entry.getKey());
+            }
+        }
+        return Optional.empty();
+    }
+
+    private Optional<Person> findCreditor(Map<Person, Long> balances) {
+        for (Map.Entry<Person, Long> entry : balances.entrySet()) {
+            if (entry.getValue() > 0) {
+                return Optional.of(entry.getKey());
+            }
+        }
+        return Optional.empty();
+    }
+
+    public List<Transfer> settleBalances(Map<Person, Long> balances) {
+        var balancesCopy = new LinkedHashMap<>(balances);
+
+        List<Transfer> transfersList = new ArrayList<>();
+
+        while (hasNonZeroBalance(balancesCopy)) {
+           Person creditor = findCreditor(balancesCopy).orElseThrow();
+           Person debtor = findDebtor(balancesCopy).orElseThrow();
+
+           long debtorBalance = balancesCopy.get(debtor);
+           long creditorBalance = balancesCopy.get(creditor);
+
+           long amount = Math.min(-debtorBalance, creditorBalance);
+
+           transfersList.add(new Transfer(debtor, creditor, amount));
+           balancesCopy.put(creditor, creditorBalance - amount);
+           balancesCopy.put(debtor, debtorBalance + amount);
+        }
+        return transfersList;
+    }
+
 }

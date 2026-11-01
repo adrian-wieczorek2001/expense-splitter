@@ -1,6 +1,10 @@
 package pl.adrianwieczorek.expensesplitter.model;
 
-public class Transfer {
+import java.util.List;
+import java.util.Map;
+
+public class
+Transfer {
 
     private final Person fromPerson;
     private final Person toPerson;
