@@ -53,5 +53,12 @@ public class Main {
         test.put(darek, -2000L);
 
         System.out.println(expenseService.settleBalances(test));
+
+        System.out.println();
+
+        Person a1 = new Person("Adam");
+        Person a2 = new Person("Adam");
+        System.out.println(a1 == a2);
+        System.out.println(a1.equals(a2));
     }
 }
