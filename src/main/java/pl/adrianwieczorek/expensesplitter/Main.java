@@ -4,6 +4,7 @@ import pl.adrianwieczorek.expensesplitter.model.Expense;
 import pl.adrianwieczorek.expensesplitter.model.Group;
 import pl.adrianwieczorek.expensesplitter.model.Person;
 import pl.adrianwieczorek.expensesplitter.service.ExpenseService;
+import pl.adrianwieczorek.expensesplitter.ui.ConsoleMenu;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -47,8 +48,8 @@ public class Main {
     public static void main(String[] args) {
         ExpenseService expenseService = new ExpenseService();
         Group group = createSampleGroup();
+        ConsoleMenu menu = new ConsoleMenu(expenseService, group);
 
-        Map<Person, Long> balances = expenseService.calculateBalances(group.getExpenses());
-        System.out.println(expenseService.settleBalances(balances));
+        menu.run();
     }
 }
