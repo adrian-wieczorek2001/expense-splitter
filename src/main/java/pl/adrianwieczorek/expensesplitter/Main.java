@@ -1,6 +1,7 @@
 package pl.adrianwieczorek.expensesplitter;
 
 import pl.adrianwieczorek.expensesplitter.model.Expense;
+import pl.adrianwieczorek.expensesplitter.model.Group;
 import pl.adrianwieczorek.expensesplitter.model.Person;
 import pl.adrianwieczorek.expensesplitter.service.ExpenseService;
 
@@ -10,6 +11,24 @@ import java.util.List;
 import java.util.Map;
 
 public class Main {
+
+    public static Group createSampleGroup() {
+        Group group = new Group("Zakopane");
+
+        Person adam = new Person("Adam");
+        Person bartek = new Person("Bartek");
+        Person celina = new Person("Celina");
+
+        group.addMember(adam);
+        group.addMember(bartek);
+        group.addMember(celina);
+        
+        group.addExpense(new Expense("nocleg", 30000, adam, List.of(adam, bartek, celina)));
+        group.addExpense(new Expense("jedzenie", 9000, bartek, List.of(adam, bartek, celina)));
+        group.addExpense(new Expense("paliwo", 6000, celina, List.of(celina, adam)));
+
+        return group;
+    }
 
     public static List<Expense> createSampleExpenses() {
         Person adam = new Person("Adam");
@@ -26,39 +45,10 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        List<Expense> expenses = createSampleExpenses();
         ExpenseService expenseService = new ExpenseService();
+        Group group = createSampleGroup();
 
-        for (Expense expense : expenses) {
-            System.out.println(expense);
-        }
-
-        System.out.println(expenseService.splitExpense(expenses.getFirst()));
-        System.out.println(expenseService.calculateBalances(expenses));
-
-        Map<Person, Long> balances = expenseService.calculateBalances(expenses);
+        Map<Person, Long> balances = expenseService.calculateBalances(group.getExpenses());
         System.out.println(expenseService.settleBalances(balances));
-
-        System.out.println();
-
-        Person ania = new Person("Ania");
-        Person bartek2 = new Person("Bartek");
-        Person celina2 = new Person("Celina");
-        Person darek = new Person("Darek");
-
-        Map<Person, Long> test = new LinkedHashMap<>();
-        test.put(ania, 5000L);
-        test.put(bartek2, 3000L);
-        test.put(celina2, -6000L);
-        test.put(darek, -2000L);
-
-        System.out.println(expenseService.settleBalances(test));
-
-        System.out.println();
-
-        Person a1 = new Person("Adam");
-        Person a2 = new Person("Adam");
-        System.out.println(a1 == a2);
-        System.out.println(a1.equals(a2));
     }
 }
