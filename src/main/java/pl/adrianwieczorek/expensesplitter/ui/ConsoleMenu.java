@@ -6,10 +6,7 @@ import pl.adrianwieczorek.expensesplitter.model.Person;
 import pl.adrianwieczorek.expensesplitter.model.Transfer;
 import pl.adrianwieczorek.expensesplitter.service.ExpenseService;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Scanner;
+import java.util.*;
 
 public class ConsoleMenu {
     private final Scanner scanner;
@@ -22,15 +19,26 @@ public class ConsoleMenu {
         this.group = Objects.requireNonNull(group, "Group cannot be null");
     }
 
+    private int readChoice() {
+        while(true) {
+            System.out.print("Choose an option: ");
+            try {
+                int choice = scanner.nextInt();
+                scanner.nextLine();
+                return choice;
+            } catch (InputMismatchException e) {
+                scanner.nextLine();
+                System.out.println("Choice must be a number");
+            }
+        }
+    }
+
     public void run() {
         boolean running = true;
 
         while (running) {
             showMenu();
-            System.out.print("Choose an option: ");
-            int choice = scanner.nextInt();
-            scanner.nextLine();
-
+            int choice = readChoice();
             switch (choice) {
                 case 1 -> showBalances();
                 case 2 -> showTransfers();
