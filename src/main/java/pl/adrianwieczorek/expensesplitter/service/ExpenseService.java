@@ -56,21 +56,27 @@ public class ExpenseService {
     }
 
     private Optional<Person> findDebtor(Map<Person, Long> balances) {
+        long minBalance = 0;
+        Person debtor = null;
         for (Map.Entry<Person, Long> entry : balances.entrySet()) {
-            if (entry.getValue() < 0) {
-                return Optional.of(entry.getKey());
+            if (entry.getValue() < minBalance) {
+                minBalance = entry.getValue();
+                debtor = entry.getKey();
             }
         }
-        return Optional.empty();
+        return Optional.ofNullable(debtor);
     }
 
     private Optional<Person> findCreditor(Map<Person, Long> balances) {
+        long maxBalance = 0;
+        Person creditor = null;
         for (Map.Entry<Person, Long> entry : balances.entrySet()) {
-            if (entry.getValue() > 0) {
-                return Optional.of(entry.getKey());
+            if (entry.getValue() > maxBalance) {
+                maxBalance = entry.getValue();
+                creditor = entry.getKey();
             }
         }
-        return Optional.empty();
+        return Optional.ofNullable(creditor);
     }
 
     public List<Transfer> settleBalances(Map<Person, Long> balances) {
