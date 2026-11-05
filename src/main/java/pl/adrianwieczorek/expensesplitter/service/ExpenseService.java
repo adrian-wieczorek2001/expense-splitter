@@ -29,7 +29,7 @@ public class ExpenseService {
     }
 
     public Map<Person, Long> calculateBalances(Group group) {
-        Map<Person, Long> balances = new HashMap<>();
+        Map<Person, Long> balances = new LinkedHashMap<>();
 
         for (Person groupMember : group.getMembers()) {
             balances.put(groupMember, 0L);
