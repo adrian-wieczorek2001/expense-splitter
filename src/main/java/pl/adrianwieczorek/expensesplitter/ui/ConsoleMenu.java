@@ -33,6 +33,11 @@ public class ConsoleMenu {
         }
     }
 
+    private String readText(String prompt) {
+        System.out.print(prompt);
+        return scanner.nextLine();
+    }
+
     public void run() {
         boolean running = true;
 
@@ -42,6 +47,7 @@ public class ConsoleMenu {
             switch (choice) {
                 case 1 -> showBalances();
                 case 2 -> showTransfers();
+                case 3 -> addMember();
                 case 0 -> running = false;
                 default -> System.out.println("Unknown option, try again.");
             }
@@ -52,6 +58,7 @@ public class ConsoleMenu {
         System.out.println("""
                     1. Show balances
                     2. Show transfers
+                    3. Add member
                     0. Exit
                     """);
     }
@@ -71,6 +78,17 @@ public class ConsoleMenu {
         List<Transfer> transfers = expenseService.settleBalances(balances);
         for (Transfer transfer : transfers) {
             System.out.println(transfer);
+        }
+    }
+
+    private void addMember() {
+        String name = readText("Type a name of member: ");
+        try {
+            Person person = new Person(name);
+            group.addMember(person);
+            System.out.println("Added person: " + person);
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            System.out.println(e.getMessage());
         }
     }
 
