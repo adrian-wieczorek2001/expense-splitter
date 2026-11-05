@@ -64,8 +64,7 @@ public class ConsoleMenu {
     }
 
     private Map<Person, Long> calculateGroupBalances() {
-        List<Expense> expenses = group.getExpenses();
-        return expenseService.calculateBalances(expenses);
+        return expenseService.calculateBalances(group);
     }
 
     private void showBalances() {

@@ -1,6 +1,7 @@
 package pl.adrianwieczorek.expensesplitter.service;
 
 import pl.adrianwieczorek.expensesplitter.model.Expense;
+import pl.adrianwieczorek.expensesplitter.model.Group;
 import pl.adrianwieczorek.expensesplitter.model.Person;
 import pl.adrianwieczorek.expensesplitter.model.Transfer;
 
@@ -27,10 +28,14 @@ public class ExpenseService {
         return result;
     }
 
-    public Map<Person, Long> calculateBalances(List<Expense> expenses) {
+    public Map<Person, Long> calculateBalances(Group group) {
         Map<Person, Long> balances = new HashMap<>();
 
-        for (Expense expense : expenses) {
+        for (Person groupMember : group.getMembers()) {
+            balances.put(groupMember, 0L);
+        }
+
+        for (Expense expense : group.getExpenses()) {
             Person payer = expense.getPaidBy();
             long currentBalance = balances.getOrDefault(payer, 0L);
             long balance = currentBalance + expense.getAmount();
