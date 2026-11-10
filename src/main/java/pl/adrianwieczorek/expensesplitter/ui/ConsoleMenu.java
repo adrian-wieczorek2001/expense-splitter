@@ -38,6 +38,35 @@ public class ConsoleMenu {
         return scanner.nextLine();
     }
 
+    private long readLong(String prompt) {
+        while (true) {
+            System.out.println(prompt);
+            try {
+                long number = scanner.nextLong();
+                scanner.nextLine();
+                return number;
+            } catch (InputMismatchException e) {
+                scanner.nextLine();
+                System.out.println("It must be a number");
+            }
+        }
+    }
+
+    private List<Person> readParticipants() {
+        List<Person> participants = new ArrayList<>();
+        boolean addMore = true;
+        while (addMore) {
+           String name = readText("Participant name: ");
+           Person person = new Person(name);
+           participants.add(person);
+           String answer = readText("Do you want to add another person? (y/n): ");
+           if (answer.equals("n")) {
+               addMore = false;
+           }
+        }
+        return participants;
+    }
+
     public void run() {
         boolean running = true;
 
