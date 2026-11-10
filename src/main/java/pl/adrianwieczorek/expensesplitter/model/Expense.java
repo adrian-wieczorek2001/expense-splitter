@@ -21,6 +21,9 @@ public class Expense {
         if (participants == null || participants.isEmpty()) {
             throw new IllegalArgumentException("List of participants cannot be empty");
         }
+        if (hasDuplicates(participants)) {
+            throw new IllegalArgumentException("Participants cannot repeat");
+        }
 
         this.description = description.trim();
         this.amount = amount;
@@ -42,6 +45,17 @@ public class Expense {
 
     public List<Person> getParticipants() {
         return participants;
+    }
+
+    private boolean hasDuplicates(List<Person> participants) {
+        for (int i = 0; i < participants.size(); i++) {
+            for (int j = i + 1; j < participants.size(); j++) {
+                if (participants.get(i).equals(participants.get(j))) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     @Override
