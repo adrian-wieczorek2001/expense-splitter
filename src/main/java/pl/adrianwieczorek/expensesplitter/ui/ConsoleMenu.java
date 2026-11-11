@@ -6,6 +6,7 @@ import pl.adrianwieczorek.expensesplitter.model.Person;
 import pl.adrianwieczorek.expensesplitter.model.Transfer;
 import pl.adrianwieczorek.expensesplitter.service.ExpenseService;
 
+import javax.management.Descriptor;
 import java.util.*;
 
 public class ConsoleMenu {
@@ -40,7 +41,7 @@ public class ConsoleMenu {
 
     private long readLong(String prompt) {
         while (true) {
-            System.out.println(prompt);
+            System.out.print(prompt);
             try {
                 long number = scanner.nextLong();
                 scanner.nextLine();
@@ -77,6 +78,7 @@ public class ConsoleMenu {
                 case 1 -> showBalances();
                 case 2 -> showTransfers();
                 case 3 -> addMember();
+                case 4 -> addExpense();
                 case 0 -> running = false;
                 default -> System.out.println("Unknown option, try again.");
             }
@@ -88,6 +90,7 @@ public class ConsoleMenu {
                     1. Show balances
                     2. Show transfers
                     3. Add member
+                    4. Add expense
                     0. Exit
                     """);
     }
@@ -116,6 +119,21 @@ public class ConsoleMenu {
             group.addMember(person);
             System.out.println("Added person: " + person);
         } catch (IllegalArgumentException | IllegalStateException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private void addExpense() {
+        String description = readText("Description: ");
+        long amount = readLong("Amount (in grosze): ");
+        try {
+            String payerName = readText("Paid by: ");
+            Person payer = new Person(payerName);
+            List<Person> participants = readParticipants();
+            Expense expense = new Expense(description, amount, payer, participants);
+            group.addExpense(expense);
+            System.out.println("Added expense: " + description);
+        } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
         }
     }
