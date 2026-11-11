@@ -5,6 +5,7 @@ import pl.adrianwieczorek.expensesplitter.model.Group;
 import pl.adrianwieczorek.expensesplitter.model.Person;
 import pl.adrianwieczorek.expensesplitter.model.Transfer;
 import pl.adrianwieczorek.expensesplitter.service.ExpenseService;
+import pl.adrianwieczorek.expensesplitter.util.AmountParser;
 
 import javax.management.Descriptor;
 import java.util.*;
@@ -49,6 +50,19 @@ public class ConsoleMenu {
             } catch (InputMismatchException e) {
                 scanner.nextLine();
                 System.out.println("It must be a number");
+            }
+        }
+    }
+
+    private long readAmount(String prompt) {
+        while (true) {
+            try {
+                String textToConvert  = readText(prompt);
+                long amount = AmountParser.parseAmount(textToConvert);
+                return amount;
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage() +
+                        "\nUse format 12,50");
             }
         }
     }
@@ -125,7 +139,7 @@ public class ConsoleMenu {
 
     private void addExpense() {
         String description = readText("Description: ");
-        long amount = readLong("Amount (in grosze): ");
+        long amount = readAmount("Amount (PLN): ");
         try {
             String payerName = readText("Paid by: ");
             Person payer = new Person(payerName);
